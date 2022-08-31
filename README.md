@@ -5,6 +5,7 @@
 - [Scripts](#scripts)
   - [Install Docker on WSL](#install-docker-on-wsl)
   - [Install K3s on WSL](#install-k3s-on-wsl)
+  - [Install GPU Support Docker on wsl](#install-gpu-support-docker-on-wsl)
 
 ## Install Docker on WSL
 
@@ -49,4 +50,10 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/ubuntu-helm.sh 
 
 ```bash
 kubectl get po --all-namespaces
+```
+
+## Install GPU Support Docker on wsl
+
+```bash
+curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-cuda.sh | sh
 ```
