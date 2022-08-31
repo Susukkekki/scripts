@@ -1,5 +1,5 @@
 #!/bin/sh
-mkdir ~/temp
+mkdir -p ~/temp
 cd ~/temp
 git clone https://github.com/DamionGans/ubuntu-wsl2-systemd-script.git
 cd ubuntu-wsl2-systemd-script/
