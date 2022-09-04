@@ -6,6 +6,7 @@
   - [Install Docker on WSL](#install-docker-on-wsl)
   - [Install K3s on WSL](#install-k3s-on-wsl)
   - [Install GPU Support Docker on wsl](#install-gpu-support-docker-on-wsl)
+  - [Install Kubeflow on wsl with GPU Support](#install-kubeflow-on-wsl-with-gpu-support)
 
 ## Install Docker on WSL
 
@@ -56,4 +57,30 @@ kubectl get po --all-namespaces
 
 ```bash
 curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-cuda.sh | sh
+```
+
+## Install Kubeflow on wsl with GPU Support
+
+1. Insttall GPU Support Docker
+
+[Install GPU Support Docker on wsl](#install-gpu-support-docker-on-wsl)
+
+2. systemd 설치
+
+```bash
+curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-systemd.sh | sh
+```
+
+- :point_right: `wsl --shutdown` 으로 종료시키고 해야 함.
+
+3. k3s 설치
+
+```bash
+curl https://raw.githubusercontent.com/Susukkekki/scripts/master/ubuntu-k3s.sh | sh
+```
+
+4. Kubeflow 설치
+
+```bash
+curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-kubeflow.sh | sh
 ```
