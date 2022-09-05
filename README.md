@@ -85,7 +85,35 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/ubuntu-k3s.sh |
 curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-kubeflow.sh | sh
 ```
 
-5. Port-forward 를 통한 접속
+5. Install nvidia device plugin (wsl 전용)
+
+```bash
+cd ~/
+wget https://raw.githubusercontent.com/Susukkekki/scripts/master/file/nvidia-device-plugin
+wget https://raw.githubusercontent.com/Susukkekki/scripts/master/file/nvidia-device-plugin.sh
+chmod 755 nvidia-device-plugin
+chmod 755 nvidia-device-plugin.sh
+```
+
+```bash
+./nvidia-device-plugin.sh
+```
+
+GPU 가 제대로 인식되는지 확인:
+
+```bash
+kubectl describe nodes  |  tr -d '\000' | sed -n -e '/^Name/,/Roles/p' -e '/^Capacity/,/Allocatable/p' -e '/^Allocated resources/,/Events/p'  | grep -e Name  -e  nvidia.com  | perl -pe 's/\n//'  |  perl -pe 's/Name:/\n/g' | sed 's/nvidia.com\/gpu:\?//g'  | sed '1s/^/Node Available(GPUs)  Used(GPUs)/' | sed 's/$/ 0 0 0/'  | awk '{print $1, $2, $3}'  | column -t
+```
+
+아래 처럼 결과가 출력되면 성공이다.
+
+```bash
+$ kubectl describe nodes  |  tr -d '\000' | sed -n -e '/^Name/,/Roles/p' -e '/^Capacity/,/Allocatable/p' -e '/^Allocated resources/,/Events/p'  | grep -e Name  -e  nvidia.com  | perl -pe 's/\n//'  |  perl -pe 's/Name:/\n/g' | sed 's/nvidia.com\/gpu:\?//g'  | sed '1s/^/Node Available(GPUs)  Used(GPUs)/' | sed 's/$/ 0 0 0/'  | awk '{print $1, $2, $3}'  | column -t
+Node             Available(GPUs)  Used(GPUs)
+desktop-r29qhap  1                0
+```
+
+6. Port-forward 를 통한 접속
 
 ```bash
 kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
