@@ -84,3 +84,16 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/ubuntu-k3s.sh |
 ```bash
 curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-kubeflow.sh | sh
 ```
+
+5. Port-forward 를 통한 접속
+
+```bash
+kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
+```
+
+다음 주소 접근 하여 로그인
+
+http://localhost:8080
+user@example.com / 12341234
+
+> :point_right: `Unable to do port forwarding: socat not found.` 이 발생하면 `sudo apt-get -y install socat` 로 설치해주면 된다.
