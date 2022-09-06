@@ -69,7 +69,7 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-cuda.sh | s
 | docker               | latest                       |
 | systemd              | latest                       |
 | k3s                  | v1.21.14+k3s1                |
-| kubeflow             | v1.5.0-rc.2                  |
+| kubeflow             | v1.4.0-rc.2                  |
 | nvidia-device-plugin | custom version built for wsl |
 
 아래 스텝을 차근차근 진행하자.
@@ -97,6 +97,18 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/ubuntu-k3s.sh |
 ```bash
 curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-kubeflow.sh | sh
 ```
+
+`Kubeflow v1.4.0-rc.02`의 경우 다음을 업데이트 해주어야 한다.
+
+```bash
+kubectl edit sts -n kubeflow kfserving-controller-manager
+```
+
+```diff
+-   image: gcr/kfserving/kfserving-controller:v0.6.0
++   image: kfserving/kfserving-controller:v0.6.1
+```
+
 
 Pod 가 모두 정상적인지 체크하는 kubectl 명령 `grep -v` 를 사용하면 `invert-match` 이다.
 
@@ -134,6 +146,8 @@ desktop-r29qhap  1                0
 
 6. Port-forward 를 통한 접속
 
+> http://localhost:32500 로 그냥 접속 되는 것 같다.
+
 ```bash
 kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
 ```
@@ -144,3 +158,50 @@ kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
 - user@example.com / 12341234
 
 > :point_right: `Unable to do port forwarding: socat not found.` 이 발생하면 `sudo apt-get -y install socat` 로 설치해주면 된다.
+
+7. Jupyter 노트북에서 "XSRF cookie does not match POST argument" Error 발생
+
+> 음 이 문제가 발생시 아래 가이드보다 그냥 Cookie 를 삭제한 후 해결된 것 같다. 원인은 계속 여러버전의 kubeflow 를 설치하다 보니 인증 정보가 재활용되었던 것 같다.
+
+다 끝난 줄 알았는데 또 문제가 발생했다. 아래 참고해 보았다.
+
+- 참고 : https://otzslayer.github.io/kubeflow/2022/06/11/could-not-find-csrf-cookie-xsrf-token-in-the-request.html
+
+kubeflow manifest 폴더 하위에서 다음 명령 실행
+
+```bash
+vi apps/jupyter/jupyter-web-app/upstream/base/deployment.yaml
+```
+
+아래 내용 추가
+
+```diff
+    spec:
+      containers:
+      - name: jupyter-web-app
+        image: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - mountPath: /etc/config
+          name: config-volume
+        - mountPath: /src/apps/default/static/assets/logos
+          name: logos-volume
+        env:
+        - name: APP_PREFIX
+          value: $(JWA_PREFIX)
+        - name: UI
+          value: $(JWA_UI)
+        - name: USERID_HEADER
+          value: $(JWA_USERID_HEADER)
+        - name: USERID_PREFIX
+          value: $(JWA_USERID_PREFIX)
++       - name: APP_SECURE_COOKIES
++         value: "false"
+```
+
+반영
+
+```bash
+kustomize build apps/jupyter/jupyter-web-app/upstream/overlays/istio | kubectl apply -f -
+```
