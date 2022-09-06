@@ -8,7 +8,7 @@ chmod +x kustomize_3.2.0_linux_amd64
 sudo mv kustomize_3.2.0_linux_amd64 /usr/local/bin/kustomize
 
 # Install manifest
-git clone https://github.com/kubeflow/manifests.git
+git clone https://github.com/kubeflow/manifests.git -b v1.5.0-rc.2
 cd manifests
 
 while ! kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
