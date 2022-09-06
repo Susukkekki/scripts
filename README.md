@@ -208,6 +208,8 @@ kustomize build apps/jupyter/jupyter-web-app/upstream/overlays/istio | kubectl a
 
 8. Serving
 
+모델 저장할때 `save_model(model, "../../model-volume/covid/1")` 과 같이 "/1" 처럼 버전을 지정해 주어야 하는것 같다. 그러고 나서 kubeflow 의 model 메뉴에서 `InferenceService`를 만들어 준다. pvc 에 저장한 모델을 불러오는 것이다.
+
 ```yaml
 apiVersion: serving.kubeflow.org/v1beta1
 kind: "InferenceService"
