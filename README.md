@@ -205,3 +205,26 @@ vi apps/jupyter/jupyter-web-app/upstream/base/deployment.yaml
 ```bash
 kustomize build apps/jupyter/jupyter-web-app/upstream/overlays/istio | kubectl apply -f -
 ```
+
+8. Serving
+
+```yaml
+apiVersion: serving.kubeflow.org/v1beta1
+kind: "InferenceService"
+metadata:
+  name: "tensorflow-mnist"
+spec:
+  predictor:
+    tensorflow:
+      storageUri: "pvc://model-volume/covid/"
+```
+
+https://github.com/kserve/kserve/issues/1976#issuecomment-1007453347 를 참고하여 아래 수정
+
+```bash
+kubectl edit cm -n kubeflow inferenceservice-config
+```
+
+kfserving/storage-initializer:v0.6.1
+
+docker pull kfserving/storage-initializer:v0.6.1
