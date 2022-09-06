@@ -61,6 +61,19 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-cuda.sh | s
 
 ## Install Kubeflow on wsl with GPU Support
 
+다음은 wsl 에 kubeflow gpu 지원 기능 설치 정보이다.
+
+| Tool                 | Version                      |
+|----------------------|------------------------------|
+| Cuda                 | 11.7.0                       |
+| docker               | latest                       |
+| systemd              | latest                       |
+| k3s                  | v1.21.14+k3s1                |
+| kubeflow             | v1.5.0-rc.2                  |
+| nvidia-device-plugin | custom version built for wsl |
+
+아래 스텝을 차근차근 진행하자.
+
 1. Insttall GPU Support Docker
 
 [Install GPU Support Docker on wsl](#install-gpu-support-docker-on-wsl)
