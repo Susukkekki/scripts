@@ -85,6 +85,12 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/ubuntu-k3s.sh |
 curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-kubeflow.sh | sh
 ```
 
+Pod 가 모두 정상적인지 체크하는 kubectl 명령 `grep -v` 를 사용하면 `invert-match` 이다.
+
+```bash
+watch "kubectl get po --all-namespaces | grep -v Running"
+```
+
 5. Install nvidia device plugin (wsl 전용)
 
 ```bash
