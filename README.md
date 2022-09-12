@@ -68,7 +68,7 @@ curl https://raw.githubusercontent.com/Susukkekki/scripts/master/wsl-cuda.sh | s
 | Cuda                 | 11.7.0                       |
 | docker               | latest                       |
 | systemd              | latest                       |
-| k3s                  | v1.21.14+k3s1                |
+| k3s                  | v1.18.20+k3s1                |
 | kubeflow             | v1.4.0-rc.2                  |
 | nvidia-device-plugin | custom version built for wsl |
 
